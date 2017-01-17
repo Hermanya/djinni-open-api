@@ -1,0 +1,16 @@
+{
+  "main": "./source/main.js",
+  "private": true,
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "devDependencies": {
+    "jest-cli": "^14.0.0"
+  },
+  "jest": {
+    "testRegex": "test/"
+  },
+  "dependencies": {
+    "commander": "^2.9.0"
+  }
+}

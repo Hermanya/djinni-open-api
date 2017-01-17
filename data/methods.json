@@ -1,0 +1,134 @@
+[
+  {
+    "cpp_method_name": "getPets",
+    "method": "get",
+    "path": "/rest/v40/pets",
+    "success_type": "list<djinni_type>",
+    "error_type": "Error",
+    "details": {
+      "description": "Returns all pets from the system that the user has access to",
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "A list of pets.",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Pet"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "cpp_method_name": "getMe",
+    "method": "get",
+    "path": "/rest/v40/me",
+    "error_type": "Error",
+    "details": {
+      "description": "description",
+      "responses": {
+        "default": {
+          "description": "Unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    }
+  },
+  {
+    "cpp_method_name": "getPetWithPetId",
+    "method": "get",
+    "path": "/rest/v40/pet/{petId}",
+    "success_type": "djinni_type",
+    "error_type": "Error",
+    "details": {
+      "description": "Returns all pets from the system that the user has access to",
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "name": "petId",
+          "in": "path",
+          "type": "integer",
+          "format": "int32",
+          "description": "Pet id"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "The pet.",
+          "schema": {
+            "$ref": "#/definitions/Pet"
+          }
+        }
+      }
+    }
+  },
+  {
+    "cpp_method_name": "deletePetWithPetId",
+    "method": "delete",
+    "path": "/rest/v40/pet/{petId}",
+    "error_type": "Error",
+    "details": {
+      "description": "Deletes a pet",
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "name": "petId",
+          "in": "path",
+          "type": "integer",
+          "format": "int32",
+          "description": "Pet id"
+        }
+      ],
+      "responses": {
+      }
+    }
+  },
+  {
+    "cpp_method_name": "postPetWithPet",
+    "method": "post",
+    "path": "/rest/v40/pet/{petId}",
+    "error_type": "Error",
+    "details": {
+      "description": "new pet",
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [
+        {
+          "name": "pet",
+          "in": "body",
+          "schema": {
+            "$ref": "#/definitions/Pet"
+          }
+        }
+      ],
+      "responses": {
+      }
+    }
+  },
+  {
+    "cpp_method_name": "putPet",
+    "method": "put",
+    "path": "/rest/v40/pet/{petId}",
+    "error_type": "Error",
+    "details": {
+      "description": "put pet with no body",
+      "produces": [
+        "application/json"
+      ],
+      "parameters": [],
+      "responses": {
+      }
+    }
+  }
+]

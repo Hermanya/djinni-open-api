@@ -1,0 +1,9 @@
+Pet = record {
+    id: djinni_type;
+    name: djinni_type;
+    tag: djinni_type;
+} deriving (json)
+
+PetDto = record {
+    name: optional<djinni_type>;
+} deriving (json)

@@ -1,0 +1,29 @@
+# Responsible for PetStore related REST calls
+PetStoreService = interface +c {
+    # Returns all pets from the system that the user has access to
+    # @param callback takes list of djinni_type and Error, one of them is null
+    getPets(callback: binary_lambda<optional<list<djinni_type>>, optional<Error>, void>);
+
+    # description
+    # @param callback takes nullable Error
+    getMe(callback: unary_lambda<optional<Error>, void>);
+
+    # Returns all pets from the system that the user has access to
+    # @param petId Pet id
+    # @param callback takes djinni_type and Error, one of them is null
+    getPetWithPetId(petId: djinni_type, callback: binary_lambda<optional<djinni_type>, optional<Error>, void>);
+
+    # Deletes a pet
+    # @param petId Pet id
+    # @param callback takes nullable Error
+    deletePetWithPetId(petId: djinni_type, callback: unary_lambda<optional<Error>, void>);
+
+    # new pet
+    # @param pet undefined
+    # @param callback takes nullable Error
+    postPetWithPet(pet: djinni_type, callback: unary_lambda<optional<Error>, void>);
+
+    # put pet with no body
+    # @param callback takes nullable Error
+    putPet(callback: unary_lambda<optional<Error>, void>);
+}
