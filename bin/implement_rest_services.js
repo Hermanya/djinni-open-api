@@ -10,16 +10,22 @@ const args = process.argv.filter(_ => _.indexOf('=') > -1).reduce((args, _) => {
   }
   return args
 }, {})
-const assert = require('assert')
-assert(args.swagger, 'please specify --swagger=path/to/swagger.json')
-const swagger = require(args.swagger)
-assert(args.interfaces, 'please specify --interfaces=path/to/djinni/generated/interfaces')
-const input_dir = args.interfaces
-assert(args.implemenations, 'please specify --implemenations=path/where/you/want/implemenations')
-const output_dir = args.implemenations
 
 const fs = require('fs')
 const path = require('path')
+
+const assert = require('assert')
+assert(args.swagger, 'please specify --swagger=path/to/swagger.json')
+const swagger = require(path.join(process.cwd(), args.swagger))
+assert(args.interfaces, 'please specify --interfaces=path/to/djinni/generated/interfaces')
+const input_dir = path.join(process.cwd(), args.interfaces)
+assert(args.implemenations, 'please specify --implemenations=path/where/you/want/implemenations')
+const output_dir = path.join(process.cwd(), args.implemenations)
+
+if (args.special_method_names) {
+  args.special_method_names = require(path.join(process.cwd(), args.special_method_names))
+}
+
 const space = '    '
 const get_type = require('../source/get_type.js')
 const normalize = require('../source/normalize.js')
@@ -64,7 +70,7 @@ function handle_input_file (interface_header_file) {
   fs.writeFile(`${output_dir}/${class_name}Impl.hpp`,
     implementation_header_file({interface_header_file, class_name}), maybe_throw);
 
-  fs.writeFile(`${output_dir}/${class_name}Impl.cpp`, rest_implementation_file(({interface_header_file, class_name}), maybe_throw))
+  fs.writeFile(`${output_dir}/${class_name}Impl.cpp`, rest_implementation_file({interface_header_file, class_name}), maybe_throw)
 }
 
 function implementation_header_file ({class_name, interface_header_file}) {
@@ -93,8 +99,12 @@ function rest_implementation_file ({interface_header_file, class_name}) {
                                 return ''
                               })
                               .replace('#pragma once', implemenation_imports.join("\n"))
+                              .replace(/\/\*\*[^\n]+\*\//, '')
+                              .replace(/\n{2,}/g, "\n\n")
                               .replace(/\n\s+virtual\s+([^\s]+)\s+([^(]+)\(([^=]+) = 0;/g, (_, return_type, method_name, params) => {
-                                let {success_type, error_type, method, path, details} = normalize(swagger).find(_ => _.cpp_method_name === method_name)
+                                let cpp_method = normalize(swagger, args).find(_ => _.cpp_method_name === method_name)
+                                assert(cpp_method, `swagger does not mention ${method_name}: \n ${swagger}`)
+                                let {success_type, error_type, method, path, details} = cpp_method
                                 var callback = callback_implementation(success_type, error_type)
 
                                 var maybeBody = (details.parameters || []).filter(_ => _.in === 'body').reduce((body, param) => {
